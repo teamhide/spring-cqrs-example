@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class UserService {
+@Transactional
+public class UserCommandService {
     private final UserRepository userRepository;
 
     public void register(RegisterUserCommand command) {

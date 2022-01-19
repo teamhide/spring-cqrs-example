@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RegisterUserResponse {
+public class GetUserResponse {
     private Long id;
     private String email;
     private String nickname;
@@ -14,7 +14,7 @@ public class RegisterUserResponse {
     private LocalDateTime updateTime;
 
     @Builder
-    public RegisterUserResponse(Long id, String email, String nickname, LocalDateTime createTime, LocalDateTime updateTime) {
+    public GetUserResponse(Long id, String email, String nickname, LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
