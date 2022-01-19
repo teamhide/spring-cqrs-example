@@ -16,6 +16,7 @@ import javax.persistence.EntityManagerFactory;
 public class HibernateListener {
     private final EntityManagerFactory entityManagerFactory;
     private final InsertEventListener insertEventListener;
+    private final UpdateEventListener updateEventListener;
 
     @PostConstruct
     private void init() {
@@ -23,5 +24,6 @@ public class HibernateListener {
         SessionFactoryImpl sessionFactory = entityManagerFactory.unwrap(SessionFactoryImpl.class);
         EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
         registry.getEventListenerGroup(EventType.PRE_INSERT).appendListener(insertEventListener);
+        registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(updateEventListener);
     }
 }
