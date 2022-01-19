@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  command-db:
+    image: postgres
+    restart: always
+    container_name: command-db
+    hostname: command-db
+    environment:
+      POSTGRES_DB: cqrs
+      POSTGRES_USER: cqrs
+      POSTGRES_PASSWORD: cqrs
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+  query-db:
+    image: mongo
+    restart: always
+    container_name: query-db
+    hostname: query-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cqrs
+      MONGO_INITDB_ROOT_PASSWORD: cqrs
+    volumes:
+      - $PWD/data/db:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: 'bridge'
