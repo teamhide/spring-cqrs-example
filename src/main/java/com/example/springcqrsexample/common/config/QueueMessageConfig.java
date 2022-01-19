@@ -30,21 +30,21 @@ public class QueueMessageConfig {
         return factory;
     }
 
-    @Bean
-    public QueueMessageHandlerFactory queueMessageHandlerFactory(AmazonSQSAsync amazonSQS) {
-        MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
-        messageConverter.setStrictContentTypeMatch(false);
-        messageConverter.setObjectMapper(objectMapper());
-
-        QueueMessageHandlerFactory factory = new QueueMessageHandlerFactory();
-        factory.setAmazonSqs(amazonSQS);
-        factory.setArgumentResolvers(Collections.singletonList(new PayloadMethodArgumentResolver(messageConverter)));
-        return factory;
-    }
-
-    private ObjectMapper objectMapper() {
-        return Jackson2ObjectMapperBuilder.json()
-                .modules(new JavaTimeModule())
-                .build();
-    }
+//    @Bean
+//    public QueueMessageHandlerFactory queueMessageHandlerFactory(AmazonSQSAsync amazonSQS) {
+//        MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
+//        messageConverter.setStrictContentTypeMatch(false);
+//        messageConverter.setObjectMapper(objectMapper());
+//
+//        QueueMessageHandlerFactory factory = new QueueMessageHandlerFactory();
+//        factory.setAmazonSqs(amazonSQS);
+//        factory.setArgumentResolvers(Collections.singletonList(new PayloadMethodArgumentResolver(messageConverter)));
+//        return factory;
+//    }
+//
+//    private ObjectMapper objectMapper() {
+//        return Jackson2ObjectMapperBuilder.json()
+//                .modules(new JavaTimeModule())
+//                .build();
+//    }
 }

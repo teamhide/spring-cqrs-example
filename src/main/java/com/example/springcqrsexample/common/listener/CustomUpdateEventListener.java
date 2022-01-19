@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class UpdateEventListener implements PreUpdateEventListener {
+public class CustomUpdateEventListener implements PreUpdateEventListener {
     @Override
     public boolean onPreUpdate(PreUpdateEvent event) {
         return false;

@@ -14,10 +14,7 @@ public class AwsSNSClient {
     public void publish(String topicArn, String message) {
         PublishRequest publishRequest = new PublishRequest()
                 .withTopicArn(topicArn)
-                .withMessage(message)
-                .addMessageAttributesEntry("contentType",
-                        new MessageAttributeValue().withDataType("String")
-                );
+                .withMessage(message);
 
         amazonSNS.publish(publishRequest);
     }

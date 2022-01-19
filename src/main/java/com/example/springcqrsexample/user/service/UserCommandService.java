@@ -16,13 +16,13 @@ public class UserCommandService {
     private final UserRepository userRepository;
 
     public void register(RegisterUserCommand command) {
-        if (!command.getPassword1().equals(command.getPassword2())) {
-            throw new DifferentPasswordException();
-        }
-
-        if (userRepository.existsByEmail(command.getEmail())) {
-            throw new DuplicateEmailException();
-        }
+//        if (!command.getPassword1().equals(command.getPassword2())) {
+//            throw new DifferentPasswordException();
+//        }
+//
+//        if (userRepository.existsByEmail(command.getEmail())) {
+//            throw new DuplicateEmailException();
+//        }
 
         User user = User.builder()
                 .email(command.getEmail())
