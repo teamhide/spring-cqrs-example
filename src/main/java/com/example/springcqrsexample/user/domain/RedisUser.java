@@ -1,15 +1,16 @@
-package com.example.springcqrsexample.user.domain.mongodb;
+package com.example.springcqrsexample.user.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Document(collation = "users")
+
 @Getter
-public class User {
+@RedisHash(value = "users")
+public class RedisUser {
     @Id
     private Long id;
 
@@ -20,10 +21,12 @@ public class User {
     private LocalDateTime updateTime;
 
     @Builder
-    public User(Long id, String email, String nickname, String password) {
+    public RedisUser(Long id, String email, String nickname, String password, LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
     }
 }

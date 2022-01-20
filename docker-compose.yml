@@ -15,26 +15,21 @@ services:
     networks:
       - backend
   query-db:
-    image: mongo
-    restart: always
+    image: redis:alpine
+    command: redis-server --port 6379
     container_name: query-db
     hostname: query-db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: cqrs
-      MONGO_INITDB_ROOT_PASSWORD: cqrs
-    volumes:
-      - $PWD/data/db:/data/db
     ports:
-      - "27017:27017"
+      - "6379:6379"
     networks:
       - backend
   redis:
     image: redis:alpine
-    command: redis-server --port 6379
+    command: redis-server --port 6378
     container_name: redis
     hostname: redis
     ports:
-      - "6379:6379"
+      - "6378:6378"
     networks:
       - backend
 
