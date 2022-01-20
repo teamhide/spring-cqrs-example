@@ -15,15 +15,16 @@ import javax.persistence.EntityManagerFactory;
 @Slf4j
 public class HibernateListener {
     private final EntityManagerFactory entityManagerFactory;
-    private final CustomUpdateEventListener customUpdateEventListener;
     private final CustomPostInsterEventListener customPostInsterEventListener;
+    private final CustomPostUpdateEventListener customPostUpdateEventListener;
 
     @PostConstruct
     private void init() {
         log.info("Initializing HibernateListener");
         SessionFactoryImpl sessionFactory = entityManagerFactory.unwrap(SessionFactoryImpl.class);
         EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
-        registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(customUpdateEventListener);
         registry.getEventListenerGroup(EventType.POST_INSERT).appendListener(customPostInsterEventListener);
+        registry.getEventListenerGroup(EventType.POST_UPDATE).appendListener(customPostUpdateEventListener);
+
     }
 }

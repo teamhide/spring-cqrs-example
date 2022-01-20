@@ -9,6 +9,6 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageSQSResponse {
-    private Long id;
+public class UserSQSMessage {
+    private Long userId;
 }
