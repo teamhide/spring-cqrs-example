@@ -1,11 +1,14 @@
 package com.example.springcqrsexample.user.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDto {
     private Long id;
     private String email;

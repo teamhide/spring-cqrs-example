@@ -1,13 +1,11 @@
 package com.example.springcqrsexample.consumer.service;
 
 import com.example.springcqrsexample.user.domain.RedisUser;
-import com.example.springcqrsexample.user.domain.User;
+import com.example.springcqrsexample.user.dto.UserDto;
 import com.example.springcqrsexample.user.repository.UserRedisRepository;
 import com.example.springcqrsexample.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,18 +15,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @Transactional
 public class UserSyncService {
-    private final UserRepository userRepository;
     private final UserRedisRepository userRedisRepository;
-    private final String baseUrl = "http://localhost:8000";
 
-    private WebClient makeWebClient(String url, String contentType) {
-        return WebClient.builder()
-                .baseUrl(url)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, contentType)
-                .build();
-    }
+    WebClient client = WebClient.create("http://localhost:8080");
 
-    private RedisUser makeRedisUser(User user) {
+    private RedisUser makeRedisUser(UserDto user) {
         return RedisUser.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
@@ -40,26 +31,39 @@ public class UserSyncService {
     }
 
     public void syncCreate(Long userId) {
-        WebClient webClient = makeWebClient(baseUrl, MediaType.APPLICATION_JSON_VALUE);
-        WebClient.ResponseSpec retrieve = webClient.get().retrieve();
-        userRepository.findById(userId).ifPresent(user -> {
-            RedisUser redisUser = makeRedisUser(user);
+        try {
+            UserDto response = client.get()
+                    .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
+                    .retrieve()
+                    .bodyToMono(UserDto.class)
+                    .block();
+            RedisUser redisUser = makeRedisUser(response);
             userRedisRepository.save(redisUser);
-        });
+        } catch (Exception e) {
+            log.error("Fail synchronize create user");
+            log.error(e.getMessage());
+            return;
+        }
         log.info("Synchronize create user");
     }
 
     public void syncUpdate(Long userId) {
-        WebClient webClient = makeWebClient(baseUrl, MediaType.APPLICATION_JSON_VALUE);
-        userRepository.findById(userId).ifPresent(user -> {
-            RedisUser redisUser = makeRedisUser(user);
+        try {
+            UserDto response = client.get()
+                    .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
+                    .retrieve()
+                    .bodyToMono(UserDto.class)
+                    .block();
+            RedisUser redisUser = makeRedisUser(response);
             userRedisRepository.save(redisUser);
-        });
+        } catch (Exception e) {
+            log.error("Fail synchronize update user");
+            return;
+        }
         log.info("Synchronize update user");
     }
 
     public void syncDelete(Long userId) {
-        WebClient webClient = makeWebClient(baseUrl, MediaType.APPLICATION_JSON_VALUE);
         userRedisRepository.deleteById(userId);
         log.info("Synchronize delete user");
     }
