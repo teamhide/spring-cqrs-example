@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.event.spi.PostInsertEvent;
-import org.hibernate.event.spi.PostInsertEventListener;
+import org.hibernate.event.spi.PostDeleteEvent;
+import org.hibernate.event.spi.PostDeleteEventListener;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,15 +15,16 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CustomPostInsterEventListener implements PostInsertEventListener {
+public class CustomPostDeleteEventListener implements PostDeleteEventListener {
     private final AwsSNSClient awsSNSClient;
     private final ObjectMapper objectMapper;
-    @Value("${cloud.aws.sns.arns.create-user}")
-    private String createUserArn;
+
+    @Value("${cloud.aws.sns.arns.delete-user}")
+    private String deleteUserArn;
 
     @Override
-    public void onPostInsert(PostInsertEvent event) {
-        log.info("Emit user insert event");
+    public void onPostDelete(PostDeleteEvent event) {
+        log.info("Emit user delete event");
         publishRelatedEntity(event.getEntity());
     }
 
@@ -47,6 +48,6 @@ public class CustomPostInsterEventListener implements PostInsertEventListener {
         UserPublishRequest request = UserPublishRequest.builder()
                 .userId(((User) entity).getId())
                 .build();
-        awsSNSClient.publish("user", createUserArn, objectMapper.writeValueAsString(request));
+        awsSNSClient.publish("user", deleteUserArn, objectMapper.writeValueAsString(request));
     }
 }

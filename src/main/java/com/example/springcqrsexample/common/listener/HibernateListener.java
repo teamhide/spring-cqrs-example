@@ -17,6 +17,7 @@ public class HibernateListener {
     private final EntityManagerFactory entityManagerFactory;
     private final CustomPostInsterEventListener customPostInsterEventListener;
     private final CustomPostUpdateEventListener customPostUpdateEventListener;
+    private final CustomPostDeleteEventListener customPostDeleteEventListener;
 
     @PostConstruct
     private void init() {
@@ -25,6 +26,6 @@ public class HibernateListener {
         EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
         registry.getEventListenerGroup(EventType.POST_INSERT).appendListener(customPostInsterEventListener);
         registry.getEventListenerGroup(EventType.POST_UPDATE).appendListener(customPostUpdateEventListener);
-
+        registry.getEventListenerGroup(EventType.POST_DELETE).appendListener(customPostDeleteEventListener);
     }
 }

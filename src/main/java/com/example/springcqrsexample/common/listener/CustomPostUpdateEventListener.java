@@ -24,6 +24,7 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
 
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
+        log.info("Emit user update event");
         publishRelatedEntity(event.getEntity());
     }
 
