@@ -33,4 +33,8 @@ public class User extends BaseTimestampEntity {
         this.nickname = nickname;
         this.password = password;
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

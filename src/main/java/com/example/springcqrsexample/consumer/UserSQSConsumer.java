@@ -18,14 +18,21 @@ public class UserSQSConsumer {
     @SqsListener(value = "create-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     public void consumeCreate(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Create User` event");
-        userSyncService.syncById(message.getUserId());
+        userSyncService.syncCreate(message.getUserId());
         ack.acknowledge();
     }
 
     @SqsListener(value = "update-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     public void consumeUpdate(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Update User` event");
-        userSyncService.syncById(message.getUserId());
+        userSyncService.syncUpdate(message.getUserId());
+        ack.acknowledge();
+    }
+
+    @SqsListener(value = "delete-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    public void consumeDelete(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
+        log.info("Received `Delete User` event");
+        userSyncService.syncDelete(message.getUserId());
         ack.acknowledge();
     }
 }
