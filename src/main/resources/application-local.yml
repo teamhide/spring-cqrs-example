@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: local
   output:
     ansi:
       enabled: always
@@ -37,3 +40,23 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.aws.autoconfigure.messaging.MessagingAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration
+cloud:
+  aws:
+    credentials:
+      access-key: accesskey
+      secret-key: secretkey
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    sns:
+      arns:
+        create-user: arn:aws:sns:ap-northeast-2:000000000000:CreateUser
+        update-user: arn:aws:sns:ap-northeast-2:000000000000:UpdateUser
+        delete-user: arn:aws:sns:ap-northeast-2:000000000000:DeleteUser
+    sqs:
+      url: http://localhost:4566

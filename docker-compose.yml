@@ -32,6 +32,19 @@ services:
       - "6378:6378"
     networks:
       - backend
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - AWS_DEFAULT_REGION=ap-northeast-2
+      - EDGE_PORT=4566
+      - SERVICES=sqs,sns
+    ports:
+      - "4566-4597:4566-4597"
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - backend
 
 networks:
   backend:
