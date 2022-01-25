@@ -37,7 +37,6 @@ public class ArticleSyncService {
                     .retrieve()
                     .bodyToMono(ArticleDto.class)
                     .block();
-            System.out.println("response = " + response);
             RedisArticle redisArticle = makeRedisArticle(response);
             articleRedisRepository.save(redisArticle);
         } catch (Exception e) {
@@ -46,5 +45,27 @@ public class ArticleSyncService {
             return;
         }
         log.info("Synchronize create article");
+    }
+
+    public void syncUpdate(Long articleId) {
+        try {
+            ArticleDto response = client.get()
+                    .uri(uriBuilder -> uriBuilder.path("/internal/articles/" + articleId).build())
+                    .retrieve()
+                    .bodyToMono(ArticleDto.class)
+                    .block();
+            RedisArticle redisArticle = makeRedisArticle(response);
+            articleRedisRepository.save(redisArticle);
+        } catch (Exception e) {
+            log.error("Fail synchronize update article");
+            log.error(e.getMessage());
+            return;
+        }
+        log.info("Synchronize update article");
+    }
+
+    public void syncDelete(Long articleId) {
+        articleRedisRepository.deleteById(articleId);
+        log.info("Synchronize delete article");
     }
 }
