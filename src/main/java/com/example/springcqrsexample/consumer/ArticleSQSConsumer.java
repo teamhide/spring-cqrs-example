@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ArticleSQSConsumer implements SQSConsumer<ArticleSQSMessage> {
     private final ArticleSyncService articleSyncService;
 
-    @SqsListener(value = "create-article", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.create-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
     public void consumeCreate(@NotificationMessage ArticleSQSMessage message, Acknowledgment ack) {
         log.info("Received `Create Article` event");
@@ -23,7 +23,7 @@ public class ArticleSQSConsumer implements SQSConsumer<ArticleSQSMessage> {
         ack.acknowledge();
     }
 
-    @SqsListener(value = "update-article", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.update-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
     public void consumeUpdate(@NotificationMessage  ArticleSQSMessage message, Acknowledgment ack) {
         log.info("Received `Update Article` event");
@@ -31,7 +31,7 @@ public class ArticleSQSConsumer implements SQSConsumer<ArticleSQSMessage> {
         ack.acknowledge();
     }
 
-    @SqsListener(value = "delete-article", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.delete-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
     public void consumeDelete(@NotificationMessage  ArticleSQSMessage message, Acknowledgment ack) {
         log.info("Received `Delete Article` event");

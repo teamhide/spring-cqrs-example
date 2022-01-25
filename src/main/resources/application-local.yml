@@ -63,3 +63,10 @@ cloud:
         delete-article: arn:aws:sns:ap-northeast-2:000000000000:DeleteArticle
     sqs:
       url: http://localhost:4566
+      queue:
+        create-user: create-user
+        update-user: update-user
+        delete-user: delete-user
+        create-article: create-article
+        update-article: update-article
+        delete-article: delete-article

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class UserSQSConsumer implements SQSConsumer<UserSQSMessage> {
     private final UserSyncService userSyncService;
 
-    @SqsListener(value = "create-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.create-user}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
     public void consumeCreate(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Create User` event");
@@ -23,7 +23,7 @@ public class UserSQSConsumer implements SQSConsumer<UserSQSMessage> {
         ack.acknowledge();
     }
 
-    @SqsListener(value = "update-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.update-user}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
     public void consumeUpdate(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Update User` event");
@@ -31,7 +31,7 @@ public class UserSQSConsumer implements SQSConsumer<UserSQSMessage> {
         ack.acknowledge();
     }
 
-    @SqsListener(value = "delete-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.delete-user}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
     public void consumeDelete(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Delete User` event");
