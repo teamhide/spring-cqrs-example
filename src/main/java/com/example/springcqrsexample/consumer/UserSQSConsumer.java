@@ -12,10 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class UserSQSConsumer {
+public class UserSQSConsumer implements SQSConsumer<UserSQSMessage> {
     private final UserSyncService userSyncService;
 
     @SqsListener(value = "create-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @Override
     public void consumeCreate(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Create User` event");
         userSyncService.syncCreate(message.getUserId());
@@ -23,6 +24,7 @@ public class UserSQSConsumer {
     }
 
     @SqsListener(value = "update-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @Override
     public void consumeUpdate(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Update User` event");
         userSyncService.syncUpdate(message.getUserId());
@@ -30,6 +32,7 @@ public class UserSQSConsumer {
     }
 
     @SqsListener(value = "delete-user", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @Override
     public void consumeDelete(@NotificationMessage UserSQSMessage message, Acknowledgment ack) {
         log.info("Received `Delete User` event");
         userSyncService.syncDelete(message.getUserId());

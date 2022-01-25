@@ -12,13 +12,26 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ArticleSQSConsumer {
+public class ArticleSQSConsumer implements SQSConsumer<ArticleSQSMessage> {
     private final ArticleSyncService articleSyncService;
 
     @SqsListener(value = "create-article", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @Override
     public void consumeCreate(@NotificationMessage ArticleSQSMessage message, Acknowledgment ack) {
         log.info("Received `Create Article` event");
         articleSyncService.syncCreate(message.getArticleId());
         ack.acknowledge();
+    }
+
+    @SqsListener(value = "update-article", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @Override
+    public void consumeUpdate(@NotificationMessage  ArticleSQSMessage message, Acknowledgment ack) {
+        log.info("Received `Update Article` event");
+    }
+
+    @SqsListener(value = "delete-article", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @Override
+    public void consumeDelete(@NotificationMessage  ArticleSQSMessage message, Acknowledgment ack) {
+        log.info("Received `Delete Article` event");
     }
 }
