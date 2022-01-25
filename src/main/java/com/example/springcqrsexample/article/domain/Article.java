@@ -38,6 +38,14 @@ public class Article extends BaseTimestampEntity {
         articleComments.add(articleComment);
     }
 
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
     @Builder
     public Article(Long id, String title, String description, User user, ArticleComment... articleComments) {
         this.id = id;

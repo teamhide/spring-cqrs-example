@@ -2,6 +2,8 @@ package com.example.springcqrsexample.article.service;
 
 import com.example.springcqrsexample.article.command.CreateArticleCommand;
 import com.example.springcqrsexample.article.command.CreateArticleCommentCommand;
+import com.example.springcqrsexample.article.command.DeleteArticleCommand;
+import com.example.springcqrsexample.article.command.UpdateArticleCommand;
 import com.example.springcqrsexample.article.domain.Article;
 import com.example.springcqrsexample.article.domain.ArticleComment;
 import com.example.springcqrsexample.article.exception.ArticleNotFoundException;
@@ -41,5 +43,34 @@ public class ArticleCommandService {
                 .article(article)
                 .build();
         articleCommentRepository.save(comment);
+    }
+
+    public void updateArticle(UpdateArticleCommand command) {
+        if (!userRepository.existsById(command.getUserId())) {
+            throw new UserNotFoundException();
+        }
+
+        Article article = articleRepository.findByIdAndUserId(command.getArticleId(), command.getUserId())
+                .orElseThrow(ArticleNotFoundException::new);
+
+        if (command.getTitle() != null) {
+            article.changeTitle(command.getTitle());
+        }
+
+        if (command.getDescription() != null) {
+            article.changeDescription(command.getDescription());
+        }
+    }
+
+    public void deleteArticle(DeleteArticleCommand command) {
+        if (!userRepository.existsById(command.getUserId())) {
+            throw new UserNotFoundException();
+        }
+
+        Article article = articleRepository.findByIdAndUserId(command.getArticleId(), command.getUserId())
+                .orElseThrow(ArticleNotFoundException::new);
+
+        articleCommentRepository.deleteByArticleId(article.getId());
+        articleRepository.delete(article);
     }
 }
