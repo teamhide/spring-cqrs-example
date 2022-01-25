@@ -29,7 +29,7 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
         log.info("Emit `Update` event");
-        publishRelatedEntity(event.getEntity());
+        publishEvents(event.getEntity());
     }
 
     @Override
@@ -37,31 +37,28 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
         return false;
     }
 
-    private void publishRelatedEntity(Object entity) {
+    private void publishEvents(Object entity) {
         try {
-            publishEventForUser(entity);
-            publishEventForArticle(entity);
+            if (entity instanceof User) {
+                publishUserEvent((User) entity);
+            } else if (entity instanceof Article) {
+                publishArticleEvent((Article) entity);
+            }
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
     }
-    private void publishEventForUser(Object entity) throws JsonProcessingException {
-        if (!(entity instanceof User)) {
-            return;
-        }
+    private void publishUserEvent(User entity) throws JsonProcessingException {
         UserPublishRequest request = UserPublishRequest.builder()
-                .userId(((User) entity).getId())
+                .userId(entity.getId())
                 .build();
-        awsSNSClient.publish("user", updateUserArn, objectMapper.writeValueAsString(request));
+        awsSNSClient.publish("update-user", updateUserArn, objectMapper.writeValueAsString(request));
     }
 
-    private void publishEventForArticle(Object entity) throws JsonProcessingException {
-        if (!(entity instanceof Article)) {
-            return;
-        }
+    private void publishArticleEvent(Article entity) throws JsonProcessingException {
         ArticlePublishRequest request = ArticlePublishRequest.builder()
-                .articleId(((Article) entity).getId())
+                .articleId(entity.getId())
                 .build();
-        awsSNSClient.publish("article", updateArticleArn, objectMapper.writeValueAsString(request));
+        awsSNSClient.publish("update-article", updateArticleArn, objectMapper.writeValueAsString(request));
     }
 }

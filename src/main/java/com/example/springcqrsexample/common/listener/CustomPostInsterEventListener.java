@@ -28,7 +28,7 @@ public class CustomPostInsterEventListener implements PostInsertEventListener {
     @Override
     public void onPostInsert(PostInsertEvent event) {
         log.info("[*] Emit `Insert` event");
-        publishRelatedEntity(event.getEntity());
+        publishEvents(event.getEntity());
     }
 
     @Override
@@ -36,32 +36,29 @@ public class CustomPostInsterEventListener implements PostInsertEventListener {
         return false;
     }
 
-    private void publishRelatedEntity(Object entity) {
+    private void publishEvents(Object entity) {
         try {
-            publishEventForUser(entity);
-            publishEventForArticle(entity);
+            if (entity instanceof User) {
+                publishUserEvent((User) entity);
+            } else if (entity instanceof Article) {
+                publishArticleEvent((Article) entity);
+            }
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
     }
 
-    private void publishEventForUser(Object entity) throws JsonProcessingException {
-        if (!(entity instanceof User)) {
-            return;
-        }
+    private void publishUserEvent(User entity) throws JsonProcessingException {
         UserPublishRequest request = UserPublishRequest.builder()
-                .userId(((User) entity).getId())
+                .userId(entity.getId())
                 .build();
-        awsSNSClient.publish("user", createUserArn, objectMapper.writeValueAsString(request));
+        awsSNSClient.publish("insert-user", createUserArn, objectMapper.writeValueAsString(request));
     }
 
-    private void publishEventForArticle(Object entity) throws JsonProcessingException {
-        if (!(entity instanceof Article)) {
-            return;
-        }
+    private void publishArticleEvent(Article entity) throws JsonProcessingException {
         ArticlePublishRequest request = ArticlePublishRequest.builder()
-                .articleId(((Article) entity).getId())
+                .articleId(entity.getId())
                 .build();
-        awsSNSClient.publish("article", createArticleArn, objectMapper.writeValueAsString(request));
+        awsSNSClient.publish("insert-article", createArticleArn, objectMapper.writeValueAsString(request));
     }
 }
