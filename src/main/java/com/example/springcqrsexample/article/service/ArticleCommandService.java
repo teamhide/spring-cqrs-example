@@ -23,7 +23,6 @@ public class ArticleCommandService {
     private final ArticleCommentRepository articleCommentRepository;
 
     public void createArticle(CreateArticleCommand command) {
-        System.out.println(command);
         User user = userRepository.findById(command.getUserId()).orElseThrow(UserNotFoundException::new);
         Article article = Article.builder()
                 .title(command.getTitle())

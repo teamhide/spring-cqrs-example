@@ -1,7 +1,11 @@
 package com.example.springcqrsexample.common.listener;
 
 import com.example.springcqrsexample.article.domain.Article;
+import com.example.springcqrsexample.article.domain.ArticleComment;
 import com.example.springcqrsexample.common.aws.AwsSNSClient;
+import com.example.springcqrsexample.common.listener.request.ArticleCommentPublishRequest;
+import com.example.springcqrsexample.common.listener.request.ArticlePublishRequest;
+import com.example.springcqrsexample.common.listener.request.UserPublishRequest;
 import com.example.springcqrsexample.user.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CustomPostInsterEventListener implements PostInsertEventListener {
+public class CustomPostInsertEventListener implements PostInsertEventListener {
     private final AwsSNSClient awsSNSClient;
     private final ObjectMapper objectMapper;
     @Value("${cloud.aws.sns.arns.create-user}")
@@ -24,6 +28,9 @@ public class CustomPostInsterEventListener implements PostInsertEventListener {
 
     @Value("${cloud.aws.sns.arns.create-article}")
     private String createArticleArn;
+
+    @Value("${cloud.aws.sns.arns.create-article-comment}")
+    private String createArticleCommentArn;
 
     @Override
     public void onPostInsert(PostInsertEvent event) {
@@ -42,6 +49,8 @@ public class CustomPostInsterEventListener implements PostInsertEventListener {
                 publishUserEvent((User) entity);
             } else if (entity instanceof Article) {
                 publishArticleEvent((Article) entity);
+            } else if (entity instanceof ArticleComment) {
+                publishArticleCommentEvent((ArticleComment) entity);
             }
         } catch (Exception e) {
             log.error(String.valueOf(e));
@@ -60,5 +69,12 @@ public class CustomPostInsterEventListener implements PostInsertEventListener {
                 .articleId(entity.getId())
                 .build();
         awsSNSClient.publish("insert-article", createArticleArn, objectMapper.writeValueAsString(request));
+    }
+
+    private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
+        ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
+                .articleId(entity.getArticle().getId())
+                .build();
+        awsSNSClient.publish("insert-comment", createArticleCommentArn, objectMapper.writeValueAsString(request));
     }
 }

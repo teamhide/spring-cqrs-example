@@ -61,6 +61,9 @@ cloud:
         create-article: arn:aws:sns:ap-northeast-2:000000000000:CreateArticle
         update-article: arn:aws:sns:ap-northeast-2:000000000000:UpdateArticle
         delete-article: arn:aws:sns:ap-northeast-2:000000000000:DeleteArticle
+        create-article-comment: arn:aws:sns:ap-northeast-2:000000000000:CreateArticleComment
+        update-article-comment: arn:aws:sns:ap-northeast-2:000000000000:UpdateArticleComment
+        delete-article-comment: arn:aws:sns:ap-northeast-2:000000000000:DeleteArticleComment
     sqs:
       url: http://localhost:4566
       queue:
@@ -70,3 +73,6 @@ cloud:
         create-article: create-article
         update-article: update-article
         delete-article: delete-article
+        create-article-comment: create-article-comment
+        update-article-comment: update-article-comment
+        delete-article-comment: delete-article-comment

@@ -12,29 +12,29 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ArticleSQSConsumer implements SQSConsumer<ArticleSQSMessage> {
+public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSMessage> {
     private final ArticleSyncService articleSyncService;
 
-    @SqsListener(value = "${cloud.aws.sqs.queue.create-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.create-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
-    public void consumeCreate(@NotificationMessage ArticleSQSMessage message, Acknowledgment ack) {
-        log.info("Received `Create Article` event");
+    public void consumeCreate(@NotificationMessage ArticleCommentSQSMessage message, Acknowledgment ack) {
+        log.info("Received `Create ArticleComment` event");
         articleSyncService.syncCreate(message.getArticleId());
         ack.acknowledge();
     }
 
-    @SqsListener(value = "${cloud.aws.sqs.queue.update-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.update-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
-    public void consumeUpdate(@NotificationMessage ArticleSQSMessage message, Acknowledgment ack) {
-        log.info("Received `Update Article` event");
+    public void consumeUpdate(@NotificationMessage ArticleCommentSQSMessage message, Acknowledgment ack) {
+        log.info("Received `Update ArticleComment` event");
         articleSyncService.syncUpdate(message.getArticleId());
         ack.acknowledge();
     }
 
-    @SqsListener(value = "${cloud.aws.sqs.queue.delete-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "${cloud.aws.sqs.queue.delete-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
-    public void consumeDelete(@NotificationMessage ArticleSQSMessage message, Acknowledgment ack) {
-        log.info("Received `Delete Article` event");
+    public void consumeDelete(@NotificationMessage ArticleCommentSQSMessage message, Acknowledgment ack) {
+        log.info("Received `Delete ArticleComment` event");
         articleSyncService.syncDelete(message.getArticleId());
         ack.acknowledge();
     }

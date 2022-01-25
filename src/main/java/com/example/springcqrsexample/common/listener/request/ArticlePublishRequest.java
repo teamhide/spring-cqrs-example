@@ -1,4 +1,4 @@
-package com.example.springcqrsexample.common.listener;
+package com.example.springcqrsexample.common.listener.request;
 
 import lombok.Builder;
 import lombok.Data;

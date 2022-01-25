@@ -1,7 +1,11 @@
 package com.example.springcqrsexample.common.listener;
 
 import com.example.springcqrsexample.article.domain.Article;
+import com.example.springcqrsexample.article.domain.ArticleComment;
 import com.example.springcqrsexample.common.aws.AwsSNSClient;
+import com.example.springcqrsexample.common.listener.request.ArticleCommentPublishRequest;
+import com.example.springcqrsexample.common.listener.request.ArticlePublishRequest;
+import com.example.springcqrsexample.common.listener.request.UserPublishRequest;
 import com.example.springcqrsexample.user.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +30,9 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
     @Value("${cloud.aws.sns.arns.delete-article}")
     private String deleteArticleArn;
 
+    @Value("${cloud.aws.sns.arns.delete-article-comment}")
+    private String deleteArticleCommentArn;
+
     @Override
     public void onPostDelete(PostDeleteEvent event) {
         log.info("Emit `Delete` event");
@@ -43,6 +50,8 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
                 publishUserEvent((User) entity);
             } else if (entity instanceof Article) {
                 publishArticleEvent((Article) entity);
+            } else if (entity instanceof ArticleComment) {
+                publishArticleCommentEvent((ArticleComment) entity);
             }
         } catch (Exception e) {
             log.error(String.valueOf(e));
@@ -61,5 +70,12 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
                 .articleId(entity.getId())
                 .build();
         awsSNSClient.publish("delete-article", deleteArticleArn, objectMapper.writeValueAsString(request));
+    }
+
+    private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
+        ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
+                .articleId(entity.getArticle().getId())
+                .build();
+        awsSNSClient.publish("delete-article-comment", deleteArticleCommentArn, objectMapper.writeValueAsString(request));
     }
 }

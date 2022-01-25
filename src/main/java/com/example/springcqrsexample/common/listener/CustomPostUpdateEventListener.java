@@ -1,7 +1,11 @@
 package com.example.springcqrsexample.common.listener;
 
 import com.example.springcqrsexample.article.domain.Article;
+import com.example.springcqrsexample.article.domain.ArticleComment;
 import com.example.springcqrsexample.common.aws.AwsSNSClient;
+import com.example.springcqrsexample.common.listener.request.ArticleCommentPublishRequest;
+import com.example.springcqrsexample.common.listener.request.ArticlePublishRequest;
+import com.example.springcqrsexample.common.listener.request.UserPublishRequest;
 import com.example.springcqrsexample.user.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +30,9 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
     @Value("${cloud.aws.sns.arns.update-article}")
     private String updateArticleArn;
 
+    @Value("${cloud.aws.sns.arns.update-article-comment}")
+    private String updateArticleCommentArn;
+
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
         log.info("Emit `Update` event");
@@ -43,6 +50,8 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
                 publishUserEvent((User) entity);
             } else if (entity instanceof Article) {
                 publishArticleEvent((Article) entity);
+            } else if (entity instanceof ArticleComment) {
+                publishArticleCommentEvent((ArticleComment) entity);
             }
         } catch (Exception e) {
             log.error(String.valueOf(e));
@@ -60,5 +69,12 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
                 .articleId(entity.getId())
                 .build();
         awsSNSClient.publish("update-article", updateArticleArn, objectMapper.writeValueAsString(request));
+    }
+
+    private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
+        ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
+                .articleId(entity.getArticle().getId())
+                .build();
+        awsSNSClient.publish("update-article-comment", updateArticleCommentArn, objectMapper.writeValueAsString(request));
     }
 }
