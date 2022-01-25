@@ -5,6 +5,8 @@ import com.example.springcqrsexample.article.dto.ArticleDto;
 import com.example.springcqrsexample.article.repository.ArticleRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,8 +17,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Transactional
 public class ArticleSyncService {
     private final ArticleRedisRepository articleRedisRepository;
+    private final String baseUrl = "http://localhost:8080";
 
-    WebClient client = WebClient.create("http://localhost:8080");
+    WebClient client = WebClient.builder()
+            .baseUrl(baseUrl)
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
 
     private RedisArticle makeRedisArticle(ArticleDto article) {
         return RedisArticle.builder()
@@ -32,36 +38,36 @@ public class ArticleSyncService {
 
     public void syncCreate(Long articleId) {
         try {
-            ArticleDto response = client.get()
+            client.get()
                     .uri(uriBuilder -> uriBuilder.path("/internal/articles/" + articleId).build())
                     .retrieve()
                     .bodyToMono(ArticleDto.class)
-                    .block();
-            RedisArticle redisArticle = makeRedisArticle(response);
-            articleRedisRepository.save(redisArticle);
+                    .subscribe(response -> {
+                        RedisArticle redisArticle = makeRedisArticle(response);
+                        articleRedisRepository.save(redisArticle);
+                        log.info("Synchronize create article");
+                    });
         } catch (Exception e) {
             log.error("Fail synchronize create article");
             log.error(e.getMessage());
-            return;
         }
-        log.info("Synchronize create article");
     }
 
     public void syncUpdate(Long articleId) {
         try {
-            ArticleDto response = client.get()
+            client.get()
                     .uri(uriBuilder -> uriBuilder.path("/internal/articles/" + articleId).build())
                     .retrieve()
                     .bodyToMono(ArticleDto.class)
-                    .block();
-            RedisArticle redisArticle = makeRedisArticle(response);
-            articleRedisRepository.save(redisArticle);
+                    .subscribe(response -> {
+                        RedisArticle redisArticle = makeRedisArticle(response);
+                        articleRedisRepository.save(redisArticle);
+                        log.info("Synchronize update article");
+                    });
         } catch (Exception e) {
             log.error("Fail synchronize update article");
             log.error(e.getMessage());
-            return;
         }
-        log.info("Synchronize update article");
     }
 
     public void syncDelete(Long articleId) {

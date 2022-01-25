@@ -5,6 +5,8 @@ import com.example.springcqrsexample.user.dto.UserDto;
 import com.example.springcqrsexample.user.repository.UserRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,8 +17,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Transactional
 public class UserSyncService {
     private final UserRedisRepository userRedisRepository;
+    private final String baseUrl = "http://localhost:8080";
 
-    WebClient client = WebClient.create("http://localhost:8080");
+    WebClient client = WebClient.builder()
+            .baseUrl(baseUrl)
+            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build();
 
     private RedisUser makeRedisUser(UserDto user) {
         return RedisUser.builder()
@@ -31,35 +37,36 @@ public class UserSyncService {
 
     public void syncCreate(Long userId) {
         try {
-            UserDto response = client.get()
+            client.get()
                     .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
                     .retrieve()
                     .bodyToMono(UserDto.class)
-                    .block();
-            RedisUser redisUser = makeRedisUser(response);
-            userRedisRepository.save(redisUser);
+                    .subscribe(response -> {
+                        RedisUser redisUser = makeRedisUser(response);
+                        userRedisRepository.save(redisUser);
+                        log.info("Synchronize create user");
+                    });
         } catch (Exception e) {
             log.error("Fail synchronize create user");
             log.error(e.getMessage());
-            return;
         }
-        log.info("Synchronize create user");
     }
 
     public void syncUpdate(Long userId) {
         try {
-            UserDto response = client.get()
+            client.get()
                     .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
                     .retrieve()
                     .bodyToMono(UserDto.class)
-                    .block();
-            RedisUser redisUser = makeRedisUser(response);
-            userRedisRepository.save(redisUser);
+                    .subscribe(response -> {
+                        RedisUser redisUser = makeRedisUser(response);
+                        userRedisRepository.save(redisUser);
+                        log.info("Synchronize update user");
+                    });
         } catch (Exception e) {
             log.error("Fail synchronize update user");
-            return;
+            log.error(e.getMessage());
         }
-        log.info("Synchronize update user");
     }
 
     public void syncDelete(Long userId) {
