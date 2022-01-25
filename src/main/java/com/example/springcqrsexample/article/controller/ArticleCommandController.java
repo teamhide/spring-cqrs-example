@@ -1,11 +1,9 @@
 package com.example.springcqrsexample.article.controller;
 
-import com.example.springcqrsexample.article.command.CreateArticleCommand;
-import com.example.springcqrsexample.article.command.CreateArticleCommentCommand;
-import com.example.springcqrsexample.article.command.DeleteArticleCommand;
-import com.example.springcqrsexample.article.command.UpdateArticleCommand;
+import com.example.springcqrsexample.article.command.*;
 import com.example.springcqrsexample.article.controller.request.CreateArticleCommentRequest;
 import com.example.springcqrsexample.article.controller.request.CreateArticleRequest;
+import com.example.springcqrsexample.article.controller.request.UpdateArticleCommentRequest;
 import com.example.springcqrsexample.article.controller.request.UpdateArticleRequest;
 import com.example.springcqrsexample.article.service.ArticleCommandService;
 import com.example.springcqrsexample.common.interceptor.Permission;
@@ -77,6 +75,24 @@ public class ArticleCommandController {
                 .body(request.getBody())
                 .build();
         articleCommandService.createComment(command);
+        return ResponseEntity.ok().build();
+    }
+
+    @Permission(role = PermissionRole.MEMBER)
+    @PutMapping("/{articleId}/comments/{commentId}")
+    public ResponseEntity<Object> updateComment(
+            @RequestBody @Valid UpdateArticleCommentRequest request,
+            @PathVariable("articleId") Long articleId,
+            @PathVariable("commentId") Long commentId,
+            @CurrentUser UserInfo user
+    ) {
+        UpdateArticleCommentCommand command = UpdateArticleCommentCommand.builder()
+                .articleId(articleId)
+                .commentId(commentId)
+                .userId(user.getId())
+                .body(request.getBody())
+                .build();
+        articleCommandService.updateComment(command);
         return ResponseEntity.ok().build();
     }
 }

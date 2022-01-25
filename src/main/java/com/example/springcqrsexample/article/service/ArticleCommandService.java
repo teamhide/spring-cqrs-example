@@ -1,11 +1,10 @@
 package com.example.springcqrsexample.article.service;
 
-import com.example.springcqrsexample.article.command.CreateArticleCommand;
-import com.example.springcqrsexample.article.command.CreateArticleCommentCommand;
-import com.example.springcqrsexample.article.command.DeleteArticleCommand;
-import com.example.springcqrsexample.article.command.UpdateArticleCommand;
+import com.example.springcqrsexample.article.command.*;
 import com.example.springcqrsexample.article.domain.Article;
 import com.example.springcqrsexample.article.domain.ArticleComment;
+import com.example.springcqrsexample.article.exception.ArticleCommentNotFoundException;
+import com.example.springcqrsexample.article.exception.ArticleCommentPermissionException;
 import com.example.springcqrsexample.article.exception.ArticleNotFoundException;
 import com.example.springcqrsexample.article.repository.ArticleCommentRepository;
 import com.example.springcqrsexample.article.repository.ArticleRepository;
@@ -72,5 +71,20 @@ public class ArticleCommandService {
 
         articleCommentRepository.deleteByArticleId(article.getId());
         articleRepository.delete(article);
+    }
+
+    public void updateComment(UpdateArticleCommentCommand command) {
+        if (!articleRepository.existsById(command.getArticleId())) {
+            throw new ArticleNotFoundException();
+        }
+
+        ArticleComment comment = articleCommentRepository
+                .findById(command.getCommentId()).orElseThrow(ArticleCommentNotFoundException::new);
+
+        if (!comment.getUser().getId().equals(command.getUserId())) {
+            throw new ArticleCommentPermissionException();
+        }
+
+        comment.changeBody(command.getBody());
     }
 }
