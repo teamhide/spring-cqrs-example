@@ -58,5 +58,8 @@ cloud:
         create-user: arn:aws:sns:ap-northeast-2:000000000000:CreateUser
         update-user: arn:aws:sns:ap-northeast-2:000000000000:UpdateUser
         delete-user: arn:aws:sns:ap-northeast-2:000000000000:DeleteUser
+        create-article: arn:aws:sns:ap-northeast-2:000000000000:CreateArticle
+        update-article: arn:aws:sns:ap-northeast-2:000000000000:UpdateArticle
+        delete-article: arn:aws:sns:ap-northeast-2:000000000000:DeleteArticle
     sqs:
       url: http://localhost:4566

@@ -35,6 +35,8 @@ services:
   localstack:
     image: localstack/localstack:latest
     environment:
+      - AWS_ACCESS_KEY_ID=ACCESSKEY
+      - AWS_SECRET_ACCESS_KEY=SECRETKEY
       - AWS_DEFAULT_REGION=ap-northeast-2
       - EDGE_PORT=4566
       - SERVICES=sqs,sns
@@ -43,6 +45,7 @@ services:
     volumes:
       - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./localstack-entrypoint.sh:/docker-entrypoint-initaws.d/init.sh"
     networks:
       - backend
 

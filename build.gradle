@@ -1,7 +1,14 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.example'
@@ -41,6 +48,10 @@ dependencies {
 	// Webclient
 	implementation group: 'io.netty', name: 'netty-resolver-dns-native-macos', version: '4.1.72.Final', classifier: 'osx-aarch_64'
 
+	// QueryDSL
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -51,3 +62,31 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+// QueryDSL settings
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+compileQuerydsl.doFirst {
+	if(file(querydslDir).exists() )
+		delete(file(querydslDir))
+}
+// QueryDSL settings end

@@ -1,5 +1,6 @@
 package com.example.springcqrsexample.common.listener;
 
+import com.example.springcqrsexample.article.domain.Article;
 import com.example.springcqrsexample.common.aws.AwsSNSClient;
 import com.example.springcqrsexample.user.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,9 +23,12 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
     @Value("${cloud.aws.sns.arns.delete-user}")
     private String deleteUserArn;
 
+    @Value("${cloud.aws.sns.arns.delete-article}")
+    private String deleteArticleArn;
+
     @Override
     public void onPostDelete(PostDeleteEvent event) {
-        log.info("Emit user delete event");
+        log.info("Emit `Delete` event");
         publishRelatedEntity(event.getEntity());
     }
 
@@ -36,6 +40,7 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
     private void publishRelatedEntity(Object entity) {
         try {
             publishEventForUser(entity);
+            publishEventForArticle(entity);
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
@@ -49,5 +54,15 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
                 .userId(((User) entity).getId())
                 .build();
         awsSNSClient.publish("user", deleteUserArn, objectMapper.writeValueAsString(request));
+    }
+
+    private void publishEventForArticle(Object entity) throws JsonProcessingException {
+        if (!(entity instanceof Article)) {
+            return;
+        }
+        ArticlePublishRequest request = ArticlePublishRequest.builder()
+                .articleId(((Article) entity).getId())
+                .build();
+        awsSNSClient.publish("article", deleteArticleArn, objectMapper.writeValueAsString(request));
     }
 }

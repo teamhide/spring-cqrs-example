@@ -1,5 +1,6 @@
 package com.example.springcqrsexample.common.listener;
 
+import com.example.springcqrsexample.article.domain.Article;
 import com.example.springcqrsexample.common.aws.AwsSNSClient;
 import com.example.springcqrsexample.user.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,9 +23,12 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
     @Value("${cloud.aws.sns.arns.update-user}")
     private String updateUserArn;
 
+    @Value("${cloud.aws.sns.arns.update-article}")
+    private String updateArticleArn;
+
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
-        log.info("Emit user update event");
+        log.info("Emit `Update` event");
         publishRelatedEntity(event.getEntity());
     }
 
@@ -36,6 +40,7 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
     private void publishRelatedEntity(Object entity) {
         try {
             publishEventForUser(entity);
+            publishEventForArticle(entity);
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
@@ -48,5 +53,15 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
                 .userId(((User) entity).getId())
                 .build();
         awsSNSClient.publish("user", updateUserArn, objectMapper.writeValueAsString(request));
+    }
+
+    private void publishEventForArticle(Object entity) throws JsonProcessingException {
+        if (!(entity instanceof Article)) {
+            return;
+        }
+        ArticlePublishRequest request = ArticlePublishRequest.builder()
+                .articleId(((Article) entity).getId())
+                .build();
+        awsSNSClient.publish("article", updateArticleArn, objectMapper.writeValueAsString(request));
     }
 }
