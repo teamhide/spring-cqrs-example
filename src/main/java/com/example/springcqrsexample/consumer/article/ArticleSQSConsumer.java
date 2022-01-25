@@ -1,6 +1,6 @@
-package com.example.springcqrsexample.consumer;
+package com.example.springcqrsexample.consumer.article;
 
-import com.example.springcqrsexample.consumer.service.ArticleSyncService;
+import com.example.springcqrsexample.consumer.SQSConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.config.annotation.NotificationMessage;

@@ -1,16 +1,15 @@
-package com.example.springcqrsexample.consumer.service;
+package com.example.springcqrsexample.consumer.user;
 
 import com.example.springcqrsexample.user.domain.RedisUser;
 import com.example.springcqrsexample.user.dto.UserDto;
 import com.example.springcqrsexample.user.repository.UserRedisRepository;
-import com.example.springcqrsexample.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
 @Transactional

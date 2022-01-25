@@ -1,4 +1,4 @@
-package com.example.springcqrsexample.consumer;
+package com.example.springcqrsexample.consumer.article;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
