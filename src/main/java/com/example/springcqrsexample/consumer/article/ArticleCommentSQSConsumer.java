@@ -42,8 +42,8 @@ public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSM
     public void consumeDelete(@NotificationMessage ArticleCommentSQSMessage message,
         Acknowledgment ack) {
         log.info("Received `Delete ArticleComment` event");
-        articleSyncService.syncDelete(message.getArticleId());
-        articleCommentSyncService.syncUpdate(message.getCommentId());
+        articleCommentSyncService.syncDelete(message.getCommentId());
+        articleSyncService.syncUpdate(message.getArticleId());
         ack.acknowledge();
     }
 }

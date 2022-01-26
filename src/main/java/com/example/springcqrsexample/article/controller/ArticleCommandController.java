@@ -98,4 +98,17 @@ public class ArticleCommandController {
         articleCommandService.updateComment(command);
         return ResponseEntity.ok().build();
     }
+
+    @Permission(role = PermissionRole.MEMBER)
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public ResponseEntity<Object> deleteComment(@PathVariable("articleId") Long articleId,
+        @PathVariable("commentId") Long commentId, @CurrentUser UserInfo user) {
+        DeleteCommentCommand command = DeleteCommentCommand.builder()
+            .articleId(articleId)
+            .commentId(commentId)
+            .userId(user.getId())
+            .build();
+        articleCommandService.deleteComment(command);
+        return ResponseEntity.ok().build();
+    }
 }

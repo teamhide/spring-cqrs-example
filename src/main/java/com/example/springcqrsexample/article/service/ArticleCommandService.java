@@ -93,4 +93,19 @@ public class ArticleCommandService {
 
         comment.changeBody(command.getBody());
     }
+
+    public void deleteComment(DeleteCommentCommand command) {
+        if (!articleRepository.existsById(command.getArticleId())) {
+            throw new ArticleNotFoundException();
+        }
+
+        ArticleComment comment = articleCommentRepository
+            .findById(command.getCommentId()).orElseThrow(ArticleCommentNotFoundException::new);
+
+        if (!comment.getUser().getId().equals(command.getUserId())) {
+            throw new ArticleCommentPermissionException();
+        }
+
+        articleCommentRepository.delete(comment);
+    }
 }
