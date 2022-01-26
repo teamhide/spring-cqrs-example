@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class ArticleSQSConsumer implements SQSConsumer<ArticleSQSMessage> {
+
     private final ArticleSyncService articleSyncService;
 
     @SqsListener(value = "${cloud.aws.sqs.queue.create-article}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)

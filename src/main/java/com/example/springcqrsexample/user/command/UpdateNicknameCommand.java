@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class UpdateNicknameCommand {
+
     private Long userId;
     private String nickname;
 

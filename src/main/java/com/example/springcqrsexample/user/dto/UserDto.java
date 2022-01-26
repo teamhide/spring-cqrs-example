@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDto {
+
     private Long id;
     private String email;
     private String nickname;
@@ -18,7 +19,8 @@ public class UserDto {
     private LocalDateTime updateTime;
 
     @Builder
-    public UserDto(Long id, String email, String nickname, String password, LocalDateTime createTime, LocalDateTime updateTime) {
+    public UserDto(Long id, String email, String nickname, String password,
+        LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;

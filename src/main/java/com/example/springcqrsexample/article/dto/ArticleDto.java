@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArticleDto {
+
     private Long id;
     private String title;
     private String description;
@@ -21,7 +22,8 @@ public class ArticleDto {
 
     @QueryProjection
     @Builder
-    public ArticleDto(Long id, String title, String description, String nickname, Long commentCount, LocalDateTime createTime, LocalDateTime updateTime) {
+    public ArticleDto(Long id, String title, String description, String nickname, Long commentCount,
+        LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
         this.title = title;
         this.description = description;

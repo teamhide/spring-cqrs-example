@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 @Component
 public class JwtTokenUtil {
+
     @Value("${spring.jwt.algorithm}")
     private String algorithm = "HS256";
 
@@ -18,28 +19,28 @@ public class JwtTokenUtil {
 
     public String encode(HashMap<String, Object> payload, int seconds) {
         return Jwts.builder()
-                .setHeader(makeHeader())
-                .setClaims(convertMapToClaims(payload))
-                .setIssuedAt(new Date())
-                .setExpiration(makeExpiration(seconds))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+            .setHeader(makeHeader())
+            .setClaims(convertMapToClaims(payload))
+            .setIssuedAt(new Date())
+            .setExpiration(makeExpiration(seconds))
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact();
     }
 
     public String encode(HashMap<String, Object> payload) {
         return Jwts.builder()
-                .setHeader(makeHeader())
-                .setClaims(convertMapToClaims(payload))
-                .setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+            .setHeader(makeHeader())
+            .setClaims(convertMapToClaims(payload))
+            .setIssuedAt(new Date())
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact();
     }
 
     public Claims decode(String token) {
         verify(token);
         return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                .parseClaimsJws(token).getBody();
+            .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+            .parseClaimsJws(token).getBody();
     }
 
     public JwtTokenPayload getPayload(String token) {
@@ -57,8 +58,8 @@ public class JwtTokenUtil {
     public void verify(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                    .parseClaimsJws(token).getBody();
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .parseClaimsJws(token).getBody();
         } catch (SignatureException e) {
             throw new JwtSignatureException();
         } catch (ExpiredJwtException e) {

@@ -19,28 +19,32 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class ArticleCommandService {
+
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ArticleCommentRepository articleCommentRepository;
 
     public void createArticle(CreateArticleCommand command) {
-        User user = userRepository.findById(command.getUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(command.getUserId())
+            .orElseThrow(UserNotFoundException::new);
         Article article = Article.builder()
-                .title(command.getTitle())
-                .description(command.getDescription())
-                .user(user)
-                .build();
+            .title(command.getTitle())
+            .description(command.getDescription())
+            .user(user)
+            .build();
         articleRepository.save(article);
     }
 
     public void createComment(CreateArticleCommentCommand command) {
-        User user = userRepository.findById(command.getUserId()).orElseThrow(UserNotFoundException::new);
-        Article article = articleRepository.findById(command.getArticleId()).orElseThrow(ArticleNotFoundException::new);
+        User user = userRepository.findById(command.getUserId())
+            .orElseThrow(UserNotFoundException::new);
+        Article article = articleRepository.findById(command.getArticleId())
+            .orElseThrow(ArticleNotFoundException::new);
         ArticleComment comment = ArticleComment.builder()
-                .body(command.getBody())
-                .user(user)
-                .article(article)
-                .build();
+            .body(command.getBody())
+            .user(user)
+            .article(article)
+            .build();
         articleCommentRepository.save(comment);
     }
 
@@ -49,8 +53,9 @@ public class ArticleCommandService {
             throw new UserNotFoundException();
         }
 
-        Article article = articleRepository.findByIdAndUserId(command.getArticleId(), command.getUserId())
-                .orElseThrow(ArticleNotFoundException::new);
+        Article article = articleRepository.findByIdAndUserId(command.getArticleId(),
+                command.getUserId())
+            .orElseThrow(ArticleNotFoundException::new);
 
         if (command.getTitle() != null) {
             article.changeTitle(command.getTitle());
@@ -66,8 +71,9 @@ public class ArticleCommandService {
             throw new UserNotFoundException();
         }
 
-        Article article = articleRepository.findByIdAndUserId(command.getArticleId(), command.getUserId())
-                .orElseThrow(ArticleNotFoundException::new);
+        Article article = articleRepository.findByIdAndUserId(command.getArticleId(),
+                command.getUserId())
+            .orElseThrow(ArticleNotFoundException::new);
 
         articleCommentRepository.deleteByArticleId(article.getId());
         articleRepository.delete(article);
@@ -79,7 +85,7 @@ public class ArticleCommandService {
         }
 
         ArticleComment comment = articleCommentRepository
-                .findById(command.getCommentId()).orElseThrow(ArticleCommentNotFoundException::new);
+            .findById(command.getCommentId()).orElseThrow(ArticleCommentNotFoundException::new);
 
         if (!comment.getUser().getId().equals(command.getUserId())) {
             throw new ArticleCommentPermissionException();

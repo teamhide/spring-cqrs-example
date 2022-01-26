@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class UserPublishRequest {
+
     private Long userId;
 
     @Builder

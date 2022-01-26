@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class UpdateArticleCommentCommand {
+
     private Long articleId;
     private Long commentId;
     private Long userId;

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class GetArticleResponse {
+
     private Long id;
     private String title;
     private String description;
@@ -16,7 +17,8 @@ public class GetArticleResponse {
     private LocalDateTime updateTime;
 
     @Builder
-    public GetArticleResponse(Long id, String title, String description, String nickname, Long commentCount, LocalDateTime createTime, LocalDateTime updateTime) {
+    public GetArticleResponse(Long id, String title, String description, String nickname,
+        Long commentCount, LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
         this.title = title;
         this.description = description;

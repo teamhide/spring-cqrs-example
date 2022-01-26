@@ -12,17 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserQueryService {
+
     private final UserRedisRepository userRedisRepository;
 
     public UserDto getUserById(Long id) {
         RedisUser user = userRedisRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return UserDto.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .createTime(user.getCreateTime())
-                .updateTime(user.getUpdateTime())
-                .build();
+            .id(user.getId())
+            .nickname(user.getNickname())
+            .email(user.getEmail())
+            .password(user.getPassword())
+            .createTime(user.getCreateTime())
+            .updateTime(user.getUpdateTime())
+            .build();
     }
 }

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @RedisHash(value = "users")
 public class RedisUser {
+
     @Id
     private Long id;
 
@@ -21,7 +22,8 @@ public class RedisUser {
     private LocalDateTime updateTime;
 
     @Builder
-    public RedisUser(Long id, String email, String nickname, String password, LocalDateTime createTime, LocalDateTime updateTime) {
+    public RedisUser(Long id, String email, String nickname, String password,
+        LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;

@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 @RequiredArgsConstructor
 public class PermissionInterceptor implements HandlerInterceptor {
+
     private final JwtTokenUtil jwtTokenUtil;
     private final UserQueryService userQueryService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+        Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }

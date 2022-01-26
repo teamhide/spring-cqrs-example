@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class CreateArticleCommentRequest {
+
     @NotEmpty
     private String body;
 }

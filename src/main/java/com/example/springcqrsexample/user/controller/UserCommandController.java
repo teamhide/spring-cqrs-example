@@ -16,29 +16,30 @@ import javax.validation.Valid;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserCommandController {
+
     private final UserCommandService userCommandService;
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody @Valid RegisterUserRequest request) {
         RegisterUserCommand command = RegisterUserCommand.builder()
-                .email(request.getEmail())
-                .nickname(request.getNickname())
-                .password1(request.getPassword1())
-                .password2(request.getPassword2())
-                .build();
+            .email(request.getEmail())
+            .nickname(request.getNickname())
+            .password1(request.getPassword1())
+            .password2(request.getPassword2())
+            .build();
         userCommandService.register(command);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateNickname(
-            @PathVariable("userId") Long userId,
-            @RequestBody @Valid UpdateNicknameRequest request
+        @PathVariable("userId") Long userId,
+        @RequestBody @Valid UpdateNicknameRequest request
     ) {
         UpdateNicknameCommand command = UpdateNicknameCommand.builder()
-                .userId(userId)
-                .nickname(request.getNickname())
-                .build();
+            .userId(userId)
+            .nickname(request.getNickname())
+            .build();
         userCommandService.updateNickname(command);
         return ResponseEntity.ok().build();
     }
@@ -46,8 +47,8 @@ public class UserCommandController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> delete(@PathVariable("userId") Long userId) {
         DeleteUserCommand command = DeleteUserCommand.builder()
-                .userId(userId)
-                .build();
+            .userId(userId)
+            .build();
         userCommandService.delete(command);
         return ResponseEntity.ok().build();
     }

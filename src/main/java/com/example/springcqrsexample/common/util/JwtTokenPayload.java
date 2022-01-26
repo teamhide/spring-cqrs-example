@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class JwtTokenPayload {
+
     private Long userId;
     private Boolean refresh;
 

@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article extends BaseTimestampEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,7 +48,8 @@ public class Article extends BaseTimestampEntity {
     }
 
     @Builder
-    public Article(Long id, String title, String description, User user, ArticleComment... articleComments) {
+    public Article(Long id, String title, String description, User user,
+        ArticleComment... articleComments) {
         this.id = id;
         this.title = title;
         this.description = description;

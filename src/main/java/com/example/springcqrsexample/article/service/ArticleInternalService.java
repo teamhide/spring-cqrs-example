@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ArticleInternalService {
+
     private final ArticleRepository articleRepository;
 
     public ArticleDto getArticle(Long articleId) {
-        return articleRepository.getArticleWithCommentInfo(articleId).orElseThrow(ArticleNotFoundException::new);
+        return articleRepository.getArticleWithCommentInfo(articleId)
+            .orElseThrow(ArticleNotFoundException::new);
     }
 }

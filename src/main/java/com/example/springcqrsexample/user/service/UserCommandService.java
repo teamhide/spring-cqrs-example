@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class UserCommandService {
+
     private final UserRepository userRepository;
 
     public void register(RegisterUserCommand command) {
@@ -28,15 +29,16 @@ public class UserCommandService {
         }
 
         User user = User.builder()
-                .email(command.getEmail())
-                .nickname(command.getNickname())
-                .password(command.getPassword1())
-                .build();
+            .email(command.getEmail())
+            .nickname(command.getNickname())
+            .password(command.getPassword1())
+            .build();
         userRepository.save(user);
     }
 
     public void updateNickname(UpdateNicknameCommand command) {
-        User user = userRepository.findById(command.getUserId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(command.getUserId())
+            .orElseThrow(UserNotFoundException::new);
         user.changeNickname(command.getNickname());
     }
 

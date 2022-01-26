@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class UserSQSConsumer implements SQSConsumer<UserSQSMessage> {
+
     private final UserSyncService userSyncService;
 
     @SqsListener(value = "${cloud.aws.sqs.queue.create-user}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)

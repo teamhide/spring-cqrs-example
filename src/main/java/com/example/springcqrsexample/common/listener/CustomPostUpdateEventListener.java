@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomPostUpdateEventListener implements PostUpdateEventListener {
+
     private final AwsSNSClient awsSNSClient;
     private final ObjectMapper objectMapper;
 
@@ -57,24 +58,28 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
             log.error(String.valueOf(e));
         }
     }
+
     private void publishUserEvent(User entity) throws JsonProcessingException {
         UserPublishRequest request = UserPublishRequest.builder()
-                .userId(entity.getId())
-                .build();
-        awsSNSClient.publish("update-user", updateUserArn, objectMapper.writeValueAsString(request));
+            .userId(entity.getId())
+            .build();
+        awsSNSClient.publish("update-user", updateUserArn,
+            objectMapper.writeValueAsString(request));
     }
 
     private void publishArticleEvent(Article entity) throws JsonProcessingException {
         ArticlePublishRequest request = ArticlePublishRequest.builder()
-                .articleId(entity.getId())
-                .build();
-        awsSNSClient.publish("update-article", updateArticleArn, objectMapper.writeValueAsString(request));
+            .articleId(entity.getId())
+            .build();
+        awsSNSClient.publish("update-article", updateArticleArn,
+            objectMapper.writeValueAsString(request));
     }
 
     private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
         ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
-                .articleId(entity.getArticle().getId())
-                .build();
-        awsSNSClient.publish("update-article-comment", updateArticleCommentArn, objectMapper.writeValueAsString(request));
+            .articleId(entity.getArticle().getId())
+            .build();
+        awsSNSClient.publish("update-article-comment", updateArticleCommentArn,
+            objectMapper.writeValueAsString(request));
     }
 }

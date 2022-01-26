@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class PublishRequest {
+
     private String topicArn;
     private String message;
 

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
     public void register(RegisterUserCommand command) {
@@ -25,10 +26,10 @@ public class UserService {
         }
 
         User user = User.builder()
-                .email(command.getEmail())
-                .nickname(command.getNickname())
-                .password(command.getPassword1())
-                .build();
+            .email(command.getEmail())
+            .nickname(command.getNickname())
+            .password(command.getPassword1())
+            .build();
         userRepository.save(user);
     }
 }

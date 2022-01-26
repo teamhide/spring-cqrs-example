@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSMessage> {
+
     private final ArticleSyncService articleSyncService;
 
     @SqsListener(value = "${cloud.aws.sqs.queue.create-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
-    public void consumeCreate(@NotificationMessage ArticleCommentSQSMessage message, Acknowledgment ack) {
+    public void consumeCreate(@NotificationMessage ArticleCommentSQSMessage message,
+        Acknowledgment ack) {
         log.info("Received `Create ArticleComment` event");
         articleSyncService.syncCreate(message.getArticleId());
         ack.acknowledge();
@@ -25,7 +27,8 @@ public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSM
 
     @SqsListener(value = "${cloud.aws.sqs.queue.update-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
-    public void consumeUpdate(@NotificationMessage ArticleCommentSQSMessage message, Acknowledgment ack) {
+    public void consumeUpdate(@NotificationMessage ArticleCommentSQSMessage message,
+        Acknowledgment ack) {
         log.info("Received `Update ArticleComment` event");
         articleSyncService.syncUpdate(message.getArticleId());
         ack.acknowledge();
@@ -33,7 +36,8 @@ public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSM
 
     @SqsListener(value = "${cloud.aws.sqs.queue.delete-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
-    public void consumeDelete(@NotificationMessage ArticleCommentSQSMessage message, Acknowledgment ack) {
+    public void consumeDelete(@NotificationMessage ArticleCommentSQSMessage message,
+        Acknowledgment ack) {
         log.info("Received `Delete ArticleComment` event");
         articleSyncService.syncDelete(message.getArticleId());
         ack.acknowledge();

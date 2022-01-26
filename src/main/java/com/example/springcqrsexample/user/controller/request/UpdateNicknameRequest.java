@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class UpdateNicknameRequest {
+
     @NotEmpty
     private String nickname;
 }

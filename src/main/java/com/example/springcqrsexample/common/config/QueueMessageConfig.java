@@ -23,6 +23,7 @@ import java.util.Collections;
 
 @Configuration
 public class QueueMessageConfig {
+
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
@@ -36,7 +37,8 @@ public class QueueMessageConfig {
     private String sqsUrl;
 
     @Bean
-    public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(AmazonSQSAsync amazonSQS) {
+    public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory(
+        AmazonSQSAsync amazonSQS) {
         SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
         simpleAsyncTaskExecutor.setConcurrencyLimit(50);
 
@@ -54,9 +56,10 @@ public class QueueMessageConfig {
     @Primary
     public AmazonSQSAsync localAmazonSQSAsync() {
         return AmazonSQSAsyncClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(sqsUrl, region))
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
-                .build();
+            .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(sqsUrl, region))
+            .withCredentials(
+                new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+            .build();
     }
 
 //    @Bean

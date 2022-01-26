@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class DeleteArticleCommand {
+
     private Long userId;
     private Long articleId;
 

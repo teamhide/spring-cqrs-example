@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomPostDeleteEventListener implements PostDeleteEventListener {
+
     private final AwsSNSClient awsSNSClient;
     private final ObjectMapper objectMapper;
 
@@ -60,22 +61,25 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
 
     private void publishUserEvent(User entity) throws JsonProcessingException {
         UserPublishRequest request = UserPublishRequest.builder()
-                .userId(entity.getId())
-                .build();
-        awsSNSClient.publish("delete-user", deleteUserArn, objectMapper.writeValueAsString(request));
+            .userId(entity.getId())
+            .build();
+        awsSNSClient.publish("delete-user", deleteUserArn,
+            objectMapper.writeValueAsString(request));
     }
 
     private void publishArticleEvent(Article entity) throws JsonProcessingException {
         ArticlePublishRequest request = ArticlePublishRequest.builder()
-                .articleId(entity.getId())
-                .build();
-        awsSNSClient.publish("delete-article", deleteArticleArn, objectMapper.writeValueAsString(request));
+            .articleId(entity.getId())
+            .build();
+        awsSNSClient.publish("delete-article", deleteArticleArn,
+            objectMapper.writeValueAsString(request));
     }
 
     private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
         ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
-                .articleId(entity.getArticle().getId())
-                .build();
-        awsSNSClient.publish("delete-article-comment", deleteArticleCommentArn, objectMapper.writeValueAsString(request));
+            .articleId(entity.getArticle().getId())
+            .build();
+        awsSNSClient.publish("delete-article-comment", deleteArticleCommentArn,
+            objectMapper.writeValueAsString(request));
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal/users")
 @RequiredArgsConstructor
 public class UserInternalController {
+
     private final UserInternalService userInternalService;
 
     @GetMapping("/{userId}")

@@ -20,16 +20,18 @@ import javax.validation.Valid;
 @RequestMapping("/api/articles")
 @RequiredArgsConstructor
 public class ArticleCommandController {
+
     private final ArticleCommandService articleCommandService;
 
     @Permission(role = PermissionRole.MEMBER)
     @PostMapping("")
-    public ResponseEntity<Object> createArticle(@RequestBody @Valid CreateArticleRequest request, @CurrentUser UserInfo user) {
+    public ResponseEntity<Object> createArticle(@RequestBody @Valid CreateArticleRequest request,
+        @CurrentUser UserInfo user) {
         CreateArticleCommand command = CreateArticleCommand.builder()
-                .userId(user.getId())
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .build();
+            .userId(user.getId())
+            .title(request.getTitle())
+            .description(request.getDescription())
+            .build();
         articleCommandService.createArticle(command);
         return ResponseEntity.ok().build();
     }
@@ -37,27 +39,28 @@ public class ArticleCommandController {
     @Permission(role = PermissionRole.MEMBER)
     @PutMapping("/{articleId}")
     public ResponseEntity<Object> updateArticle(
-            @RequestBody @Valid UpdateArticleRequest request,
-            @PathVariable("articleId") Long articleId,
-            @CurrentUser UserInfo user
+        @RequestBody @Valid UpdateArticleRequest request,
+        @PathVariable("articleId") Long articleId,
+        @CurrentUser UserInfo user
     ) {
         UpdateArticleCommand command = UpdateArticleCommand.builder()
-                .userId(user.getId())
-                .articleId(articleId)
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .build();
+            .userId(user.getId())
+            .articleId(articleId)
+            .title(request.getTitle())
+            .description(request.getDescription())
+            .build();
         articleCommandService.updateArticle(command);
         return ResponseEntity.ok().build();
     }
 
     @Permission(role = PermissionRole.MEMBER)
     @DeleteMapping("/{articleId}")
-    public ResponseEntity<Object> deleteArticle(@PathVariable("articleId") Long articleId, @CurrentUser UserInfo user) {
+    public ResponseEntity<Object> deleteArticle(@PathVariable("articleId") Long articleId,
+        @CurrentUser UserInfo user) {
         DeleteArticleCommand command = DeleteArticleCommand.builder()
-                .userId(user.getId())
-                .articleId(articleId)
-                .build();
+            .userId(user.getId())
+            .articleId(articleId)
+            .build();
         articleCommandService.deleteArticle(command);
         return ResponseEntity.ok().build();
     }
@@ -65,15 +68,15 @@ public class ArticleCommandController {
     @Permission(role = PermissionRole.MEMBER)
     @PostMapping("/{articleId}/comments")
     public ResponseEntity<Object> createComment(
-            @RequestBody @Valid CreateArticleCommentRequest request,
-            @PathVariable("articleId") Long articleId,
-            @CurrentUser UserInfo user
+        @RequestBody @Valid CreateArticleCommentRequest request,
+        @PathVariable("articleId") Long articleId,
+        @CurrentUser UserInfo user
     ) {
         CreateArticleCommentCommand command = CreateArticleCommentCommand.builder()
-                .userId(user.getId())
-                .articleId(articleId)
-                .body(request.getBody())
-                .build();
+            .userId(user.getId())
+            .articleId(articleId)
+            .body(request.getBody())
+            .build();
         articleCommandService.createComment(command);
         return ResponseEntity.ok().build();
     }
@@ -81,17 +84,17 @@ public class ArticleCommandController {
     @Permission(role = PermissionRole.MEMBER)
     @PutMapping("/{articleId}/comments/{commentId}")
     public ResponseEntity<Object> updateComment(
-            @RequestBody @Valid UpdateArticleCommentRequest request,
-            @PathVariable("articleId") Long articleId,
-            @PathVariable("commentId") Long commentId,
-            @CurrentUser UserInfo user
+        @RequestBody @Valid UpdateArticleCommentRequest request,
+        @PathVariable("articleId") Long articleId,
+        @PathVariable("commentId") Long commentId,
+        @CurrentUser UserInfo user
     ) {
         UpdateArticleCommentCommand command = UpdateArticleCommentCommand.builder()
-                .articleId(articleId)
-                .commentId(commentId)
-                .userId(user.getId())
-                .body(request.getBody())
-                .build();
+            .articleId(articleId)
+            .commentId(commentId)
+            .userId(user.getId())
+            .body(request.getBody())
+            .build();
         articleCommandService.updateComment(command);
         return ResponseEntity.ok().build();
     }

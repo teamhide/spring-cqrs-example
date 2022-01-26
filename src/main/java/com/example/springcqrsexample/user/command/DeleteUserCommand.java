@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class DeleteUserCommand {
+
     private Long userId;
 
     @Builder

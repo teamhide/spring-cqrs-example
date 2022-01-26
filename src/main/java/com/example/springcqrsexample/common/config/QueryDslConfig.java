@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 @Configuration
 @Slf4j
 public class QueryDslConfig {
+
     @PersistenceContext
     private EntityManager entityManager;
 

@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class RegisterUserCommand {
+
     private String email;
     private String nickname;
     private String password1;

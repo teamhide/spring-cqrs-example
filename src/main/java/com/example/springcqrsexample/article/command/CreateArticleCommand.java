@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class CreateArticleCommand {
+
     private Long userId;
     private String title;
     private String description;

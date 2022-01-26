@@ -16,36 +16,37 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @Transactional
 public class UserSyncService {
+
     private final UserRedisRepository userRedisRepository;
     private final String baseUrl = "http://localhost:8080";
 
     WebClient client = WebClient.builder()
-            .baseUrl(baseUrl)
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build();
+        .baseUrl(baseUrl)
+        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .build();
 
     private RedisUser makeRedisUser(UserDto user) {
         return RedisUser.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .password(user.getPassword())
-                .email(user.getEmail())
-                .createTime(user.getCreateTime())
-                .updateTime(user.getUpdateTime())
-                .build();
+            .id(user.getId())
+            .nickname(user.getNickname())
+            .password(user.getPassword())
+            .email(user.getEmail())
+            .createTime(user.getCreateTime())
+            .updateTime(user.getUpdateTime())
+            .build();
     }
 
     public void syncCreate(Long userId) {
         try {
             client.get()
-                    .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
-                    .retrieve()
-                    .bodyToMono(UserDto.class)
-                    .subscribe(response -> {
-                        RedisUser redisUser = makeRedisUser(response);
-                        userRedisRepository.save(redisUser);
-                        log.info("Synchronize create user");
-                    });
+                .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
+                .retrieve()
+                .bodyToMono(UserDto.class)
+                .subscribe(response -> {
+                    RedisUser redisUser = makeRedisUser(response);
+                    userRedisRepository.save(redisUser);
+                    log.info("Synchronize create user");
+                });
         } catch (Exception e) {
             log.error("Fail synchronize create user");
             log.error(e.getMessage());
@@ -55,14 +56,14 @@ public class UserSyncService {
     public void syncUpdate(Long userId) {
         try {
             client.get()
-                    .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
-                    .retrieve()
-                    .bodyToMono(UserDto.class)
-                    .subscribe(response -> {
-                        RedisUser redisUser = makeRedisUser(response);
-                        userRedisRepository.save(redisUser);
-                        log.info("Synchronize update user");
-                    });
+                .uri(uriBuilder -> uriBuilder.path("/internal/users/" + userId).build())
+                .retrieve()
+                .bodyToMono(UserDto.class)
+                .subscribe(response -> {
+                    RedisUser redisUser = makeRedisUser(response);
+                    userRedisRepository.save(redisUser);
+                    log.info("Synchronize update user");
+                });
         } catch (Exception e) {
             log.error("Fail synchronize update user");
             log.error(e.getMessage());

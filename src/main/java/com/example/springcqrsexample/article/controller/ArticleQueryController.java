@@ -14,20 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/articles")
 @RequiredArgsConstructor
 public class ArticleQueryController {
+
     private final ArticleQueryService articleQueryService;
 
     @GetMapping("/{articleId}")
-    public ResponseEntity<GetArticleResponse> getArticle(@PathVariable("articleId") Long articleId) {
+    public ResponseEntity<GetArticleResponse> getArticle(
+        @PathVariable("articleId") Long articleId) {
         ArticleDto article = articleQueryService.getArticleById(articleId);
         GetArticleResponse response = GetArticleResponse.builder()
-                .id(article.getId())
-                .title(article.getTitle())
-                .description(article.getDescription())
-                .nickname(article.getNickname())
-                .commentCount(article.getCommentCount())
-                .createTime(article.getCreateTime())
-                .updateTime(article.getUpdateTime())
-                .build();
+            .id(article.getId())
+            .title(article.getTitle())
+            .description(article.getDescription())
+            .nickname(article.getNickname())
+            .commentCount(article.getCommentCount())
+            .createTime(article.getCreateTime())
+            .updateTime(article.getUpdateTime())
+            .build();
         return ResponseEntity.ok(response);
     }
 }

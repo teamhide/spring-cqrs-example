@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class CustomPostInsertEventListener implements PostInsertEventListener {
+
     private final AwsSNSClient awsSNSClient;
     private final ObjectMapper objectMapper;
     @Value("${cloud.aws.sns.arns.create-user}")
@@ -59,22 +60,25 @@ public class CustomPostInsertEventListener implements PostInsertEventListener {
 
     private void publishUserEvent(User entity) throws JsonProcessingException {
         UserPublishRequest request = UserPublishRequest.builder()
-                .userId(entity.getId())
-                .build();
-        awsSNSClient.publish("insert-user", createUserArn, objectMapper.writeValueAsString(request));
+            .userId(entity.getId())
+            .build();
+        awsSNSClient.publish("insert-user", createUserArn,
+            objectMapper.writeValueAsString(request));
     }
 
     private void publishArticleEvent(Article entity) throws JsonProcessingException {
         ArticlePublishRequest request = ArticlePublishRequest.builder()
-                .articleId(entity.getId())
-                .build();
-        awsSNSClient.publish("insert-article", createArticleArn, objectMapper.writeValueAsString(request));
+            .articleId(entity.getId())
+            .build();
+        awsSNSClient.publish("insert-article", createArticleArn,
+            objectMapper.writeValueAsString(request));
     }
 
     private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
         ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
-                .articleId(entity.getArticle().getId())
-                .build();
-        awsSNSClient.publish("insert-comment", createArticleCommentArn, objectMapper.writeValueAsString(request));
+            .articleId(entity.getArticle().getId())
+            .build();
+        awsSNSClient.publish("insert-comment", createArticleCommentArn,
+            objectMapper.writeValueAsString(request));
     }
 }

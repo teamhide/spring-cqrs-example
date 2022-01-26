@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/internal/articles")
 @RequiredArgsConstructor
 public class ArticleInternalController {
+
     private final ArticleInternalService articleInternalService;
 
     @GetMapping("/{articleId}")

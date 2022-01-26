@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AppConfig implements WebMvcConfigurer {
+
     private final CurrentUserArgumentResolver currentUserArgumentResolver;
     private final PermissionInterceptor permissionInterceptor;
 
