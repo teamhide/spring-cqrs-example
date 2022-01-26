@@ -12,4 +12,5 @@ import lombok.ToString;
 public class ArticleCommentSQSMessage {
 
     private Long articleId;
+    private Long commentId;
 }

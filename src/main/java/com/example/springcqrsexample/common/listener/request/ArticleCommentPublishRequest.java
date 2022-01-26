@@ -7,9 +7,11 @@ import lombok.Data;
 public class ArticleCommentPublishRequest {
 
     private Long articleId;
+    private Long commentId;
 
     @Builder
-    public ArticleCommentPublishRequest(Long articleId) {
+    public ArticleCommentPublishRequest(Long articleId, Long commentId) {
         this.articleId = articleId;
+        this.commentId = commentId;
     }
 }

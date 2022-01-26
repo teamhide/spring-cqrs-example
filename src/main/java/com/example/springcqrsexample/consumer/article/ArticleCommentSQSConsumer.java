@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSMessage> {
 
     private final ArticleSyncService articleSyncService;
+    private final ArticleCommentSyncService articleCommentSyncService;
 
     @SqsListener(value = "${cloud.aws.sqs.queue.create-article-comment}", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
     @Override
@@ -22,6 +23,7 @@ public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSM
         Acknowledgment ack) {
         log.info("Received `Create ArticleComment` event");
         articleSyncService.syncCreate(message.getArticleId());
+        articleCommentSyncService.syncCreate(message.getCommentId());
         ack.acknowledge();
     }
 
@@ -31,6 +33,7 @@ public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSM
         Acknowledgment ack) {
         log.info("Received `Update ArticleComment` event");
         articleSyncService.syncUpdate(message.getArticleId());
+        articleCommentSyncService.syncUpdate(message.getCommentId());
         ack.acknowledge();
     }
 
@@ -40,6 +43,7 @@ public class ArticleCommentSQSConsumer implements SQSConsumer<ArticleCommentSQSM
         Acknowledgment ack) {
         log.info("Received `Delete ArticleComment` event");
         articleSyncService.syncDelete(message.getArticleId());
+        articleCommentSyncService.syncUpdate(message.getCommentId());
         ack.acknowledge();
     }
 }

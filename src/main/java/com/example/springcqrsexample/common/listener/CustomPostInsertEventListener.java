@@ -77,6 +77,7 @@ public class CustomPostInsertEventListener implements PostInsertEventListener {
     private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
         ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
             .articleId(entity.getArticle().getId())
+            .commentId(entity.getId())
             .build();
         awsSNSClient.publish("insert-comment", createArticleCommentArn,
             objectMapper.writeValueAsString(request));

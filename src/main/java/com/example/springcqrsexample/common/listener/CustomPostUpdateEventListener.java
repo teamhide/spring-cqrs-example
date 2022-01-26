@@ -78,6 +78,7 @@ public class CustomPostUpdateEventListener implements PostUpdateEventListener {
     private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
         ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
             .articleId(entity.getArticle().getId())
+            .commentId(entity.getId())
             .build();
         awsSNSClient.publish("update-article-comment", updateArticleCommentArn,
             objectMapper.writeValueAsString(request));

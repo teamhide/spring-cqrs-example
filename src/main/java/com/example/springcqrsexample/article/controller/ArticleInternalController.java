@@ -1,5 +1,6 @@
 package com.example.springcqrsexample.article.controller;
 
+import com.example.springcqrsexample.article.dto.ArticleCommentDto;
 import com.example.springcqrsexample.article.dto.ArticleDto;
 import com.example.springcqrsexample.article.service.ArticleInternalService;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,10 @@ public class ArticleInternalController {
     @GetMapping("/{articleId}")
     public ArticleDto getArticle(@PathVariable("articleId") Long articleId) {
         return articleInternalService.getArticle(articleId);
+    }
+
+    @GetMapping("/comments/{commentId}")
+    public ArticleCommentDto getComment(@PathVariable("commentId") Long commentId) {
+        return articleInternalService.getArticleComment(commentId);
     }
 }

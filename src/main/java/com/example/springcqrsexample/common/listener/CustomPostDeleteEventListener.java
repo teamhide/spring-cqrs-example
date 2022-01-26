@@ -78,6 +78,7 @@ public class CustomPostDeleteEventListener implements PostDeleteEventListener {
     private void publishArticleCommentEvent(ArticleComment entity) throws JsonProcessingException {
         ArticleCommentPublishRequest request = ArticleCommentPublishRequest.builder()
             .articleId(entity.getArticle().getId())
+            .commentId(entity.getId())
             .build();
         awsSNSClient.publish("delete-article-comment", deleteArticleCommentArn,
             objectMapper.writeValueAsString(request));
