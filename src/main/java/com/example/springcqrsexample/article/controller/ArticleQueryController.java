@@ -4,7 +4,7 @@ import com.example.springcqrsexample.article.command.GetCommentsCommand;
 import com.example.springcqrsexample.article.controller.response.GetArticleResponse;
 import com.example.springcqrsexample.article.controller.response.GetCommentsResponse;
 import com.example.springcqrsexample.article.dto.ArticleCommentDto;
-import com.example.springcqrsexample.article.dto.ArticleDto;
+import com.example.springcqrsexample.article.dto.ArticleWithCommentDto;
 import com.example.springcqrsexample.article.service.ArticleQueryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,14 @@ public class ArticleQueryController {
     @GetMapping("/{articleId}")
     public ResponseEntity<GetArticleResponse> getArticle(
         @PathVariable("articleId") Long articleId) {
-        ArticleDto article = articleQueryService.getArticleById(articleId);
+        ArticleWithCommentDto article = articleQueryService.getArticleById(articleId);
         GetArticleResponse response = GetArticleResponse.builder()
             .id(article.getId())
             .title(article.getTitle())
             .description(article.getDescription())
             .nickname(article.getNickname())
             .commentCount(article.getCommentCount())
+            .comments(article.getComments())
             .createTime(article.getCreateTime())
             .updateTime(article.getUpdateTime())
             .build();

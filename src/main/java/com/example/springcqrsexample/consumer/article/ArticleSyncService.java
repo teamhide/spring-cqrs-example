@@ -1,8 +1,12 @@
 package com.example.springcqrsexample.consumer.article;
 
 import com.example.springcqrsexample.article.domain.RedisArticle;
-import com.example.springcqrsexample.article.dto.ArticleDto;
+import com.example.springcqrsexample.article.domain.RedisArticleComment;
+import com.example.springcqrsexample.article.dto.ArticleCommentDto;
+import com.example.springcqrsexample.article.dto.ArticleWithCommentDto;
 import com.example.springcqrsexample.article.repository.ArticleRedisRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -25,13 +29,29 @@ public class ArticleSyncService {
         .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .build();
 
-    private RedisArticle makeRedisArticle(ArticleDto article) {
+    private RedisArticleComment makeRedisArticleComment(ArticleCommentDto comment) {
+        return RedisArticleComment.builder()
+            .id(comment.getId())
+            .body(comment.getBody())
+            .nickname(comment.getNickname())
+            .articleId(comment.getArticleId())
+            .createTime(comment.getCreateTime())
+            .updateTime(comment.getUpdateTime())
+            .build();
+    }
+
+    private RedisArticle makeRedisArticle(ArticleWithCommentDto article) {
+        List<RedisArticleComment> comments = article.getComments().stream()
+            .map(this::makeRedisArticleComment)
+            .collect(Collectors.toList());
+
         return RedisArticle.builder()
             .id(article.getId())
             .nickname(article.getNickname())
             .title(article.getTitle())
             .description(article.getDescription())
             .commentCount(article.getCommentCount())
+            .comments(comments)
             .createTime(article.getCreateTime())
             .updateTime(article.getUpdateTime())
             .build();
@@ -42,7 +62,7 @@ public class ArticleSyncService {
             client.get()
                 .uri(uriBuilder -> uriBuilder.path("/internal/articles/" + articleId).build())
                 .retrieve()
-                .bodyToMono(ArticleDto.class)
+                .bodyToMono(ArticleWithCommentDto.class)
                 .subscribe(response -> {
                     RedisArticle redisArticle = makeRedisArticle(response);
                     articleRedisRepository.save(redisArticle);
@@ -59,7 +79,7 @@ public class ArticleSyncService {
             client.get()
                 .uri(uriBuilder -> uriBuilder.path("/internal/articles/" + articleId).build())
                 .retrieve()
-                .bodyToMono(ArticleDto.class)
+                .bodyToMono(ArticleWithCommentDto.class)
                 .subscribe(response -> {
                     RedisArticle redisArticle = makeRedisArticle(response);
                     articleRedisRepository.save(redisArticle);

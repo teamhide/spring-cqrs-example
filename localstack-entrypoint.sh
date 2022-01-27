@@ -44,9 +44,9 @@ aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:a
 aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:DeleteArticle --protocol sqs --notification-endpoint http://localhost:4566/000000000000/delete-article | cat -
 
 # ArticleComment
-aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:CreateArticleComment --protocol sqs --notification-endpoint http://localhost:4566/000000000000/create-article-comment
-aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:UpdateArticleComment --protocol sqs --notification-endpoint http://localhost:4566/000000000000/update-article-comment
-aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:DeleteArticleComment --protocol sqs --notification-endpoint http://localhost:4566/000000000000/delete-article-comment
+aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:CreateArticleComment --protocol sqs --notification-endpoint http://localhost:4566/000000000000/create-article-comment | cat -
+aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:UpdateArticleComment --protocol sqs --notification-endpoint http://localhost:4566/000000000000/update-article-comment | cat -
+aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:ap-northeast-2:000000000000:DeleteArticleComment --protocol sqs --notification-endpoint http://localhost:4566/000000000000/delete-article-comment | cat -
 
 echo "[*] Configure Localstack Done"
 

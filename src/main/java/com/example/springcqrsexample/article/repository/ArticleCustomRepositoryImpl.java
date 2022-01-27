@@ -1,25 +1,24 @@
 package com.example.springcqrsexample.article.repository;
 
-import com.example.springcqrsexample.article.dto.ArticleDto;
-import com.example.springcqrsexample.article.dto.QArticleDto;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
-
 import static com.example.springcqrsexample.article.domain.QArticle.article;
 import static com.example.springcqrsexample.article.domain.QArticleComment.articleComment;
 import static com.example.springcqrsexample.user.domain.QUser.user;
+
+import com.example.springcqrsexample.article.dto.ArticleWithCommentDto;
+import com.example.springcqrsexample.article.dto.QArticleWithCommentDto;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public Optional<ArticleDto> getArticleWithCommentInfo(Long id) {
-        ArticleDto articleDto = queryFactory.select(
-                new QArticleDto(
+    public Optional<ArticleWithCommentDto> getArticleWithCommentInfo(Long id) {
+        ArticleWithCommentDto articleDto = queryFactory.select(
+                new QArticleWithCommentDto(
                     article.id,
                     article.title,
                     article.description,
