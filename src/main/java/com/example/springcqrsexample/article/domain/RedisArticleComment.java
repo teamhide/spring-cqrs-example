@@ -5,15 +5,18 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
 @RedisHash(value = "article_comment")
 public class RedisArticleComment {
 
     @Id
+    @Indexed
     private Long id;
     private String body;
     private String nickname;
+    @Indexed
     private Long articleId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;

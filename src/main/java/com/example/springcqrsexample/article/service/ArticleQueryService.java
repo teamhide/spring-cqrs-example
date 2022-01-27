@@ -57,7 +57,8 @@ public class ArticleQueryService {
 
     public List<ArticleCommentDto> getComments(GetCommentsCommand command) {
         PageRequest pageRequest = PageRequest.of(command.getPage(), command.getSize());
-        Page<RedisArticleComment> result = articleCommentRedisRepository.findAll(pageRequest);
+        Page<RedisArticleComment> result = articleCommentRedisRepository.findAllByArticleId(
+            command.getArticleId(), pageRequest);
         List<RedisArticleComment> contents = result.getContent();
 
         return contents.stream().map(comment ->
