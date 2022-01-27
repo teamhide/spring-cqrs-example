@@ -1,17 +1,18 @@
 package com.example.springcqrsexample.article.domain;
 
+import java.time.LocalDateTime;
+import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
-
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
 @RedisHash(value = "article")
 public class RedisArticle {
 
     @Id
+    @Indexed
     private Long id;
     private String title;
     private String description;
